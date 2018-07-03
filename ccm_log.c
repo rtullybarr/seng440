@@ -1,21 +1,24 @@
+#include <stdio.h>
 #include <math.h>
 #define PRECISION 16
 
-uint32_t lookup_table[PRECISION];
+float lookup_table[PRECISION];
 
 void populate_lookup_table() {
-    for (int i = 0; i < PRECISION; i++) {
-        lookup_table[i] = (log2(1.0 + (pow(2.0, -1*i)))*(1 << 16));
+    int i;
+    for (i = 0; i < PRECISION; i++) {
+        lookup_table[i] = log2(1.0 + (pow(2.0, -1*i)));
     }
 }
 
-uint32_t ccm_log(uint32_t M) {
+float ccm_log(unsigned int M) {
     // Precision: K bits (16 bits)
-    uint32_t f = 0;
-    uint32_t u = 0;
-    uint32_t theta = 0;
+    float f = 0;
+    unsigned int u = 0;
+    float theta = 0;
+    int i;
 
-    for (int i = 0; i < PRECISION; i++) {
+    for (i = 0; i < PRECISION; i++) {
         u = M + (M >> i);
         theta = f - lookup_table[i];
 
@@ -28,11 +31,17 @@ uint32_t ccm_log(uint32_t M) {
     return f;
 }
 
-
 int main (void) {
     // Calculate log M, where 0.5 <= M < 1.0
     // M is a normalized fixed-point number
     populate_lookup_table();
 
-    log_M = ccm_log(M);
+    float m = 0.7;
+    // convert to fixed-point
+    // 0.5 = 0, 1.0 = 2^0 = 2^16
+    unsigned int M = (unsigned int)(m * (1 << 16));
+
+    float log_M = ccm_log(M);
+
+    printf("%f\n", log_M);
 }

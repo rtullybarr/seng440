@@ -4,6 +4,6 @@
 #define PRECISION 32
 
 void populate_lookup_table();
-float ccm_log(unsigned int M);
+int ccm_log(unsigned int M);
 
 #endif

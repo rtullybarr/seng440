@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 
-int lookup_table[PRECISION];
+// Note: extra spot in lookup table to accommodate software pipelining.
+int lookup_table[PRECISION + 1];
 
 void populate_lookup_table() {
     int i;
@@ -18,18 +19,19 @@ void populate_lookup_table() {
 int ccm_log(unsigned int M) {
     // Precision: K bits
     int f = 0;
-    unsigned int u = 0;
-    int theta = 0;
-    int i;
+    int i = 0;
+    unsigned int u = M + (M >> i);
+    int theta = f - lookup_table[i];
 
-    for (i = 0; i < PRECISION; i++) {
-        u = M + (M >> i);
-        theta = f - lookup_table[i];
+    for (i = 1; i < PRECISION + 1; i++) {
 
         if (u <= (1 << 30)) {
             M = u;
             f = theta;
         }
+
+        u = M + (M >> i);
+        theta = f - lookup_table[i];
     }
 
     return f;

@@ -8,7 +8,7 @@ int main (void) {
 
     populate_lookup_table();
 
-    for (float m = 0.5; m <= 1.0; m += 0.1) {
+    for (float m = 0.5; m <= 1.0; m += 0.01) {
         // convert to fixed-point
         unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 

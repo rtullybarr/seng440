@@ -19,19 +19,20 @@ void populate_lookup_table() {
 int ccm_log(unsigned int M) {
     // Precision: K bits
     int f = 0;
-    int i = 0;
-    unsigned int u = M + (M >> i);
-    int theta = f - lookup_table[i];
+    int i = PRECISION + 1;
+    int j = 0;
+    unsigned int u = M + (M >> j);
+    int theta = f - lookup_table[j];
 
-    for (i = 1; i < PRECISION + 1; i++) {
-
+    for (; i; --i) {
+        ++j;
         if (u <= SCALE_FACTOR) {
             M = u;
             f = theta;
         }
 
-        u = M + (M >> i);
-        theta = f - lookup_table[i];
+        u = M + (M >> j);
+        theta = f - lookup_table[j];
     }
 
     return f;

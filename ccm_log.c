@@ -9,7 +9,7 @@ void populate_lookup_table() {
     int i;
     for (i = 0; i < PRECISION; i++) {
         float num = (log2(1.0 + (pow(2.0, -1*i))));
-        lookup_table[i] = (int)(num * (1 << 30));
+        lookup_table[i] = (int)(num * SCALE_FACTOR);
     }
 }
 
@@ -25,7 +25,7 @@ int ccm_log(unsigned int M) {
 
     for (i = 1; i < PRECISION + 1; i++) {
 
-        if (u <= (1 << 30)) {
+        if (u <= SCALE_FACTOR) {
             M = u;
             f = theta;
         }

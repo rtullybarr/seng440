@@ -9,7 +9,7 @@ int main (void) {
     populate_lookup_table();
     float m;
 
-    for (m = 0.5; m <= 1.0; m += 0.01) {
+    for (m = 0.5; m <= 1.0; m += 0.0000001) {
         // convert to fixed-point
         unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 
@@ -17,7 +17,5 @@ int main (void) {
 
         // convert from fixed-point
         float log_m = (log_M) / (float)SCALE_FACTOR;
-
-        printf("ccm= %.10f, log2= %.10f\n", log_m, log2(m));
     }
 }

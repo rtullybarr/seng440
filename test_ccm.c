@@ -8,13 +8,11 @@ int main (void) {
 
     populate_lookup_table();
 
-    for (float m = 0.5; m <= 1.0; m += 0.05) {
+    for (float m = 0.5; m <= 1.0; m += 0.0000001) {
         // convert to fixed-point
         // 0 = 0, 1.0 = 2^0 = 2^24
         unsigned int M = (unsigned int)(m * (1 << 30));
 
         float log_M = ccm_log(M);
-
-        printf("ccm= %f, log2= %f\n", log_M, log2(m));
     }
 }

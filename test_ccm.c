@@ -7,8 +7,9 @@ int main (void) {
     // M is a normalized fixed-point number
 
     populate_lookup_table();
+    float m;
 
-    for (float m = 0.5; m <= 1.0; m += 0.01) {
+    for (m = 0.5; m <= 1.0; m += 0.01) {
         // convert to fixed-point
         unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 

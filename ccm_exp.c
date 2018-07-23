@@ -18,15 +18,16 @@ void populate_lookup_table() {
 // A fixed point number.
 int ccm_exp(unsigned int M) {
     // Precision: K bits
-    int f = 0;
+    int f = SCALE_FACTOR;
     int i = PRECISION + 1;
     int j = 0;
-    unsigned int u = M - lookup_table[j];
+    int u = M - lookup_table[j];
     int theta = f + (f >> j);
 
     for (; i; --i) {
+
         ++j;
-        if (u <= SCALE_FACTOR) {
+        if (u >= 0) {
             M = u;
             f = theta;
         }

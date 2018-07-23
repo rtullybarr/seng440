@@ -8,7 +8,7 @@ int main (void) {
 
     populate_lookup_table();
 
-    for (float m = 0.0; m <= 1.0; m += 0.1) {
+    for (float m = 0.0; m <= 1.0; m += 0.0000001) {
         // convert to fixed-point
         unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 
@@ -17,7 +17,7 @@ int main (void) {
         // convert from fixed-point
         float exp_m = (exp_M) / (float)SCALE_FACTOR;
 
-        printf("ccm= %.10f, exp2= %.10f\n", exp_m, pow(2.0, m));
+        //printf("ccm= %.10f, exp2= %.10f\n", exp_m, pow(2.0, m));
     }
 }
 

@@ -14,12 +14,13 @@ int main (void) {
             // convert to fixed-point
             unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 
-            int log_M = ccm_log(M);
+            int log_M;
+            CCM_LOG(M, log_M)
 
             // convert from fixed-point
             float log_m = (log_M) / (float)SCALE_FACTOR;
 
-            //printf("ccm=%f, log2=%f\n", log_m, log2(m));
+            //printf("ccm= %.10f, log2= %.10f\n", log_m, log2(m));
         }
     }
 }

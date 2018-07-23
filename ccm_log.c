@@ -16,7 +16,7 @@ void populate_lookup_table() {
 // CCM - convergence computing method
 // Calculates the base-2 logarithm of M,
 // A fixed point number.
-int ccm_log(unsigned int M) {
+inline int ccm_log(unsigned int M) {
     // Precision: K bits
     int f = 0;
     int i = PRECISION + 1;

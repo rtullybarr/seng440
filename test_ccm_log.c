@@ -7,10 +7,9 @@ int main (void) {
     // M is a normalized fixed-point number
 
     populate_lookup_table();
-    float m;
+    float m = 0.6;
 
-    for (int i = 0; i < 100; i++) {
-        for (m = 0.5; m <= 1.0; m += 0.0000001) {
+    //for (m = 0.5; m <= 1.0; m += 0.0000001) {
             // convert to fixed-point
             unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 
@@ -19,7 +18,7 @@ int main (void) {
             // convert from fixed-point
             float log_m = (log_M) / (float)SCALE_FACTOR;
 
-            //printf("ccm=%f, log2=%f\n", log_m, log2(m));
-        }
-    }
+            printf("ccm=%f, log2=%f\n", log_m, log2(m));
+        //}
+    //}
 }

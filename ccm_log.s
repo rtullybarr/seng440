@@ -18,31 +18,31 @@ ccm_log:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	str	r4, [sp, #-4]!
-	ldr	r4, .L8
-	ldr	r3, [r4, #0]
-	mov	ip, #0
-	rsb	r3, r3, #0
-	mov	r1, r0, asl #1
-	mov	r2, ip
-	b	.L4
+	str	r4, [sp, #-4]!  @ preserve r4
+	ldr	r4, .L8			@ location of LUT
+	ldr	r3, [r4, #0]    @ first element of LUT to r3 (r3 = theta)
+	mov	ip, #0			@ move 0 to scratch register (f = 0)
+	rsb	r3, r3, #0		@ r3 = -r3 					(theta = f(==0) - LUT[0])
+	mov	r1, r0, asl #1  @ r1 = r0 << 1 				(u = M + M -> line24)
+	mov	r2, ip			@ r2 = 0 					(i = 0)
+	b	.L4				@ branch to L4              (go to for loop)
 .L7:
-	add	r1, r0, r0, lsr r2
+	add	r1, r0, r0, lsr r2 @ r1 = r0 + (r0 >> r2) 	(u = M + (M >> i))
 .L4:
-	cmp	r1, #1073741824
-	add	r2, r2, #1
-	movls	ip, r3
-	ldr	r3, [r4, r2, asl #2]
-	movls	r0, r1
-	cmp	r2, #31
-	rsb	r3, r3, ip
-	bne	.L7
-	mov	r0, ip
-	ldmfd	sp!, {r4}
-	bx	lr
+	cmp	r1, #1073741824 @ u <= SCALE_FACTOR?
+	add	r2, r2, #1		@ increase counter  		(i = i+1)
+	movls	ip, r3		@ ip = r3 if r1 <= SF       (f = theta if u <=SCALE_FACTOR)
+	ldr	r3, [r4, r2, asl #2] @ r3 = next LUT elem   (theta = LUT[i])
+	movls	r0, r1      @ r0 = r1 if r1 <= SF       (M = u if u <= SCALE_FACTOR)
+	cmp	r2, #31			@ i == 32?
+	rsb	r3, r3, ip		@ r3 = ip - r3				(theta = f - LUT[i])
+	bne	.L7				@ if i != 31, update r1     (update u, repeat loop)   
+	mov	r0, ip			@ r0 = ip					(return f)
+	ldmfd	sp!, {r4}   @ load r4, return
+	bx	lr				@ PC = link register
 .L9:
 	.align	2
-.L8:
+.L8:					@ find location of LUT, populate
 	.word	lookup_table
 	.size	ccm_log, .-ccm_log
 	.global	__aeabi_i2d
@@ -57,16 +57,16 @@ populate_lookup_table:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	stmfd	sp!, {r4, r5, r6, lr}
-	mov	r4, #0
-	ldr	r6, .L14
-	mov	r5, r4
+	stmfd	sp!, {r4, r5, r6, lr} 	@ stack all registers and return addr
+	mov	r4, #0						@ r4 = 0 (&LUT = 0)
+	ldr	r6, .L14					@ r6 = LUT properties??
+	mov	r5, r4						@ r5 = 0
 .L11:
-	mov	r0, r4
-	bl	__aeabi_i2d
-	mov	r2, r0
-	mov	r3, r1
-	mov	r0, #0
+	mov	r0, r4						@ r0 = 0
+	bl	__aeabi_i2d					@ convert r0 uint32 -> 64 bit float
+	mov	r2, r0						@ r2 = float(0)
+	mov	r3, r1						@ r3 = r1 (r1 = ??)
+	mov	r0, #0						@ 
 	mov	r1, #1073741824
 	bl	pow
 	mov	r3, #1069547520

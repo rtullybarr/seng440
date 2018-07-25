@@ -6,7 +6,6 @@ int main (void) {
     // Calculate log M, where 0.5 <= M < 1.0
     // M is a normalized fixed-point number
 
-    populate_lookup_table();
     float m = 0.6;
 
     //for (m = 0.5; m <= 1.0; m += 0.0000001) {

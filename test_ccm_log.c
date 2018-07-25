@@ -6,8 +6,6 @@ int main (void) {
     // Calculate log M, where 0.5 <= M < 1.0
     // M is a normalized fixed-point number
 
-    populate_lookup_table();
-
     // For profiling: doing conversions from floating point
     // outside loop.
     unsigned int start = (unsigned int)(0.5 * SCALE_FACTOR);

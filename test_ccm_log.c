@@ -9,15 +9,14 @@ int main (void) {
     float m = 0.6;
 
     //for (m = 0.5; m <= 1.0; m += 0.0000001) {
-            // convert to fixed-point
-            unsigned int M = (unsigned int)(m * SCALE_FACTOR);
+        // convert to fixed-point
+        unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 
-            int log_M = ccm_log(M);
+        int log_M = ccm_log(M);
 
-            // convert from fixed-point
-            float log_m = (log_M) / (float)SCALE_FACTOR;
+        // convert from fixed-point
+        float log_m = (log_M) / (float)SCALE_FACTOR;
 
-            printf("ccm=%f, log2=%f\n", log_m, log2(m));
-        //}
+        printf("ccm=%f, log2=%f\n", log_m, log2(m));
     //}
 }

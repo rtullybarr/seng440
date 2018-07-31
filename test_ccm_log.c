@@ -12,8 +12,10 @@ int main (void) {
         // convert to fixed-point
         unsigned int M = (unsigned int)(m * SCALE_FACTOR);
 
-        int log_M = ccm_log(M);
-
+        //int log_M = ccm_log(M);
+        int log_M;
+        __asm__("ccm_log %0, %1" : "=r" (log_M) : "r" (M));
+        
         // convert from fixed-point
         float log_m = (log_M) / (float)SCALE_FACTOR;
 

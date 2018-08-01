@@ -21,22 +21,26 @@ static inline void populate_lookup_table() {
 // CCM - convergence computing method
 // Calculates the base-2 logarithm of M,
 // A fixed point number.
-// (puts result in F)
-#define CCM_LOG(M, F) \
-    int ___f = 0; \
-    int ___i = PRECISION + 1; \
-    int ___j = 0; \
-    unsigned int ___u = (M) + ((M) >> ___j); \
-    int ___theta = ___f - lookup_table[___j]; \
-    for (; ___i; --___i) { \
-        ++___j; \
-        if (___u <= SCALE_FACTOR) { \
-            (M) = ___u; \
-            ___f = ___theta; \
-        } \
-        ___u = (M) + ((M) >> ___j); \
-        ___theta = ___f - lookup_table[___j]; \
-    } \
-    F = ___f; \
+static inline int ccm_log(unsigned int M) {
+    // Precision: K bits
+    int f = 0;
+    int i = PRECISION + 1;
+    int j = 0;
+    unsigned int u = M + (M >> j);
+    int theta = f - lookup_table[j];
+
+    for (; i; --i) {
+        ++j;
+        if (u <= SCALE_FACTOR) {
+            M = u;
+            f = theta;
+        }
+
+        u = M + (M >> j);
+        theta = f - lookup_table[j];
+    }
+
+    return f;
+}
 
 #endif

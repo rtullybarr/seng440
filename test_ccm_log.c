@@ -19,6 +19,6 @@ int main (void) {
         // convert from fixed-point
         float log_m = (log_M) / (float)SCALE_FACTOR;
 
-        printf("ccm=%f, log2=%f\n", log_m, log2(m));
+        printf("ccm= %.10f, log2= %.10f\n", log_m, log2(m));
     //}
 }

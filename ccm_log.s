@@ -6,102 +6,183 @@
 	.eabi_attribute 24, 1
 	.eabi_attribute 25, 1
 	.eabi_attribute 26, 2
-	.eabi_attribute 30, 2
+	.eabi_attribute 30, 6
 	.eabi_attribute 18, 4
 	.file	"test_ccm_log.c"
-	.global	__aeabi_i2d
-	.global	__aeabi_dadd
-	.global	__aeabi_d2f
+	.global	lookup_table
+	.data
+	.align	2
+	.type	lookup_table, %object
+	.size	lookup_table, 124
+lookup_table:
+	.word	1073741824
+	.word	628098688
+	.word	345667648
+	.word	182455584
+	.word	93912512
+	.word	47667824
+	.word	24017256
+	.word	12055174
+	.word	6039313
+	.word	3022600
+	.word	1512037
+	.word	756203
+	.word	378147
+	.word	189085
+	.word	94545
+	.word	47273
+	.word	23636
+	.word	11818
+	.word	5909
+	.word	2954
+	.word	1477
+	.word	738
+	.word	369
+	.word	184
+	.word	92
+	.word	46
+	.word	23
+	.word	11
+	.word	5
+	.word	2
+	.word	0
 	.global	__aeabi_fmul
-	.global	__aeabi_f2iz
+	.global	__aeabi_f2uiz
 	.global	__aeabi_i2f
+	.global	__aeabi_fdiv
 	.global	__aeabi_f2d
+	.section	.rodata
+	.align	2
+.LC0:
+	.ascii	"ccm= %.10f, log2= %.10f\012\000"
 	.text
 	.align	2
 	.global	main
 	.type	main, %function
 main:
 	@ Function supports interworking.
-	@ args = 0, pretend = 0, frame = 0
-	@ frame_needed = 0, uses_anonymous_args = 0
-	stmfd	sp!, {r4, r5, r6, lr}
-	mov	r4, #0
-	ldr	r6, .L10+8
-	sub	sp, sp, #8
-	mov	r5, r4
-.L2:
-	mov	r0, r4
-	bl	__aeabi_i2d
-	mov	r2, r0
-	mov	r3, r1
-	mov	r0, #0
-	mov	r1, #1073741824
-	bl	pow
-	mov	r3, #1069547520
-	mov	r2, #0
-	add	r3, r3, #3145728
-	bl	__aeabi_dadd
-	bl	log2
-	bl	__aeabi_d2f
-	mov	r1, #1308622848
-	add	r1, r1, #8388608
+	@ args = 0, pretend = 0, frame = 16
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {r4, r5, r6, fp, lr}
+	add	fp, sp, #16
+	sub	sp, sp, #28
+	ldr	r3, .L3	@ float
+	str	r3, [fp, #-36]	@ float
+	ldr	r3, [fp, #-36]	@ float
+	ldr	r2, .L3+4	@ float
+	mov	r0, r3
+	mov	r1, r2
 	bl	__aeabi_fmul
-	bl	__aeabi_f2iz
-	sub	r4, r4, #1
-	cmn	r4, #30
-	str	r0, [r6, r5]
-	add	r5, r5, #4
-	bne	.L2
-	ldr	r3, .L10+8
-	mov	ip, #641728512
-	ldr	r2, [r3, #0]
-	mov	r3, #1275068416
-	add	r3, r3, #13369344
-	add	ip, ip, #2506752
-	mov	r1, #0
-	rsb	r2, r2, #0
-	add	r3, r3, #52480
-	add	ip, ip, #9856
-	mov	r0, r1
-	b	.L5
-.L9:
-	add	r3, ip, ip, lsr r1
-.L5:
-	cmp	r3, #1073741824
-	add	r1, r1, #1
-	movls	ip, r3
-	ldr	r3, [r6, r1, asl #2]
-	movls	r0, r2
-	cmp	r1, #31
-	rsb	r2, r3, r0
-	bne	.L9
+	mov	r3, r0
+	mov	r0, r3
+	bl	__aeabi_f2uiz
+	mov	r3, r0
+	str	r3, [fp, #-32]
+	ldr	r0, [fp, #-32]
+	bl	ccm_log
+	mov	r3, r0
+	str	r3, [fp, #-28]
+	ldr	r0, [fp, #-28]
 	bl	__aeabi_i2f
-	mov	r1, #813694976
-	bl	__aeabi_fmul
+	mov	r3, r0
+	ldr	r2, .L3+4	@ float
+	mov	r0, r3
+	mov	r1, r2
+	bl	__aeabi_fdiv
+	mov	r3, r0
+	str	r3, [fp, #-24]	@ float
+	ldr	r0, [fp, #-24]	@ float
 	bl	__aeabi_f2d
-	adr	r5, .L10
-	ldmia	r5, {r4-r5}
-	mov	r2, r0
-	mov	r3, r1
-	ldr	r0, .L10+12
-	stmia	sp, {r4-r5}
+	mov	r5, r0
+	mov	r6, r1
+	ldr	r0, [fp, #-36]	@ float
+	bl	__aeabi_f2d
+	mov	r3, r0
+	mov	r4, r1
+	mov	r0, r3
+	mov	r1, r4
+	bl	log2
+	mov	r3, r0
+	mov	r4, r1
+	stmia	sp, {r3-r4}
+	ldr	r0, .L3+8
+	mov	r2, r5
+	mov	r3, r6
 	bl	printf
-	mov	r0, #0
-	add	sp, sp, #8
-	ldmfd	sp!, {r4, r5, r6, lr}
+	mov	r3, #0
+	mov	r0, r3
+	sub	sp, fp, #16
+	ldmfd	sp!, {r4, r5, r6, fp, lr}
 	bx	lr
-.L11:
-	.align	3
-.L10:
-	.word	-1075836637
-	.word	-1075342024
-	.word	lookup_table
+.L4:
+	.align	2
+.L3:
+	.word	1058642330
+	.word	1317011456
 	.word	.LC0
 	.size	main, .-main
-	.comm	lookup_table,124,4
-	.section	.rodata.str1.4,"aMS",%progbits,1
 	.align	2
-.LC0:
-	.ascii	"ccm=%f, log2=%f\012\000"
+	.type	ccm_log, %function
+ccm_log:
+	@ Function supports interworking.
+	@ args = 0, pretend = 0, frame = 24
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #28
+	str	r0, [fp, #-24]
+	mov	r3, #0
+	str	r3, [fp, #-20]
+	mov	r3, #31
+	str	r3, [fp, #-16]
+	mov	r3, #0
+	str	r3, [fp, #-12]
+	ldr	r2, [fp, #-24]
+	ldr	r3, [fp, #-12]
+	mov	r2, r2, lsr r3
+	ldr	r3, [fp, #-24]
+	add	r3, r2, r3
+	str	r3, [fp, #-8]
+	b	.L6
+.L8:
+	ldr	r3, [fp, #-8]
+	cmp	r3, #1073741824
+	bhi	.L7
+	ldr	r3, [fp, #-8]
+	str	r3, [fp, #-24]
+	ldr	r2, [fp, #-12]
+	ldr	r3, .L10
+	ldr	r2, [r3, r2, asl #2]
+	ldr	r3, [fp, #-20]
+	rsb	r3, r2, r3
+	str	r3, [fp, #-20]
+.L7:
+	ldr	r3, [fp, #-12]
+	add	r3, r3, #1
+	str	r3, [fp, #-12]
+	ldr	r2, [fp, #-24]
+	ldr	r3, [fp, #-12]
+	mov	r2, r2, lsr r3
+	ldr	r3, [fp, #-24]
+	add	r3, r2, r3
+	str	r3, [fp, #-8]
+	ldr	r3, [fp, #-16]
+	sub	r3, r3, #1
+	str	r3, [fp, #-16]
+.L6:
+	ldr	r3, [fp, #-16]
+	cmp	r3, #0
+	bne	.L8
+	ldr	r3, [fp, #-20]
+	mov	r0, r3
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+.L11:
+	.align	2
+.L10:
+	.word	lookup_table
+	.size	ccm_log, .-ccm_log
 	.ident	"GCC: (Sourcery G++ Lite 2008q3-72) 4.3.2"
 	.section	.note.GNU-stack,"",%progbits

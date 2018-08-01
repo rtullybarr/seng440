@@ -29,11 +29,12 @@ static inline int ccm_log(unsigned int M) {
     unsigned int u = M + (M >> j);
 
     for (; i; --i) {
-        ++j;
         if (u <= SCALE_FACTOR) {
             M = u;
             f -= lookup_table[j];
         }
+
+        j++;
 
         u = M + (M >> j);
     }

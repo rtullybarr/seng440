@@ -52,16 +52,17 @@ static inline int ccm_log(unsigned int M) {
     int i = PRECISION + 1;
     int j = 0;
     unsigned int u = M + (M >> j);
+    int theta = 0;
 
     for (; i; --i) {
+        ++j;
         if (u <= SCALE_FACTOR) {
             M = u;
-            f -= lookup_table[j];
+            f = theta;
         }
 
-        j++;
-
         u = M + (M >> j);
+        theta = f - lookup_table[j];
     }
 
     return f;

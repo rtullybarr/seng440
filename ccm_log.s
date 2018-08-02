@@ -9,9 +9,13 @@
 	.eabi_attribute 30, 2
 	.eabi_attribute 18, 4
 	.file	"test_ccm_log.c"
-	.global	__aeabi_i2f
 	.global	__aeabi_fmul
+	.global	__aeabi_f2uiz
 	.global	__aeabi_f2d
+	.global	__aeabi_i2f
+	.global	__aeabi_dadd
+	.global	__aeabi_d2f
+	.global	__aeabi_fcmple
 	.text
 	.align	2
 	.global	main
@@ -20,44 +24,68 @@ main:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	stmfd	sp!, {r4, r5, lr}
-	mov	r3, #641728512
-	add	r3, r3, #2506752
-	mov	r0, #0
-	ldr	ip, .L8+8
+	stmfd	sp!, {r4, r5, r6, r7, r8, sl, lr}
+	ldr	sl, .L10+8
 	sub	sp, sp, #12
-	add	r3, r3, #9856
-	mov	r1, r0
+	mov	r4, #1056964608
 .L5:
-	add	r1, r1, #1
-	add	r2, r3, r3, lsr r1
-	cmp	r2, #1073741824
-	ldrls	r3, [ip, r1, asl #2]
-	movhi	r2, r3
-	rsbls	r0, r3, r0
-	cmp	r1, #30
-	mov	r3, r2
-	bne	.L5
+	mov	r1, #1308622848
+	add	r1, r1, #8388608
+	mov	r0, r4
+	bl	__aeabi_fmul
+	bl	__aeabi_f2uiz
+	mov	r2, #0
+	mov	r3, r0, asl #1
+	mov	r8, r2
+	mov	r1, r2
+	b	.L4
+.L9:
+	add	r3, r0, r0, lsr r2
+.L4:
+	cmp	r3, #1073741824
+	add	r2, r2, #1
+	movls	r0, r3
+	ldr	r3, [sl, r2, asl #2]
+	movls	r8, r1
+	cmp	r2, #31
+	rsb	r1, r3, r8
+	bne	.L9
+	mov	r0, r4
+	bl	__aeabi_f2d
+	mov	r6, r0
+	mov	r7, r1
+	bl	log2
+	mov	r4, r0
+	mov	r0, r8
+	mov	r5, r1
 	bl	__aeabi_i2f
 	mov	r1, #813694976
 	bl	__aeabi_fmul
 	bl	__aeabi_f2d
-	adr	r5, .L8
-	ldmia	r5, {r4-r5}
 	mov	r2, r0
 	mov	r3, r1
-	ldr	r0, .L8+12
+	ldr	r0, .L10+12
 	stmia	sp, {r4-r5}
 	bl	printf
-	mov	r0, #0
+	adr	r3, .L10
+	ldmia	r3, {r2-r3}
+	mov	r0, r6
+	mov	r1, r7
+	bl	__aeabi_dadd
+	bl	__aeabi_d2f
+	mov	r1, #1065353216
+	mov	r4, r0
+	bl	__aeabi_fcmple
+	cmp	r0, #0
+	bne	.L5
 	add	sp, sp, #12
-	ldmfd	sp!, {r4, r5, lr}
+	ldmfd	sp!, {r4, r5, r6, r7, r8, sl, lr}
 	bx	lr
-.L9:
+.L11:
 	.align	3
-.L8:
-	.word	-1075836637
-	.word	-1075342024
+.L10:
+	.word	-1698910392
+	.word	1048238066
 	.word	.LANCHOR0
 	.word	.LC0
 	.size	main, .-main
